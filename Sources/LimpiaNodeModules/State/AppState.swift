@@ -9,6 +9,8 @@ final class AppState {
     var entries: [NodeModulesEntry] = []
     var selected: Set<String> = []
     var isScanning = false
+    var scanTotal = 0
+    var scanCompleted = 0
     var isDeleting = false
     var lastScanDate: Date?
     var statusMessage: String?
@@ -18,6 +20,11 @@ final class AppState {
         config = ConfigStore.load()
         launchAtLogin = LoginItemManager.isEnabled
         startAutoCleanLoop()
+        // Escaneo al arrancar: los resultados ya están listos al abrir el popover.
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(2))
+            self.scan()
+        }
     }
 
     // MARK: - Derivados
@@ -44,15 +51,41 @@ final class AppState {
         guard !isScanning else { return }
         isScanning = true
         statusMessage = nil
+        entries = []
+        selected = []
+        scanTotal = 0
+        scanCompleted = 0
         let roots = config.roots
         Task.detached(priority: .userInitiated) {
-            let result = ProjectScanner.scan(roots: roots)
+            let paths = ProjectScanner.findNodeModulesPaths(roots: roots)
             await MainActor.run {
-                self.entries = result
-                self.selected = Set(result.map(\.id))
+                self.scanTotal = paths.count
+            }
+
+            let maxConcurrent = min(8, max(2, ProcessInfo.processInfo.activeProcessorCount))
+            await withTaskGroup(of: NodeModulesEntry.self) { group in
+                var pending = paths.makeIterator()
+                for _ in 0..<maxConcurrent {
+                    guard let url = pending.next() else { break }
+                    group.addTask { ProjectScanner.measure(nodeModules: url) }
+                }
+                for await entry in group {
+                    if let url = pending.next() {
+                        group.addTask { ProjectScanner.measure(nodeModules: url) }
+                    }
+                    await MainActor.run {
+                        self.entries.append(entry)
+                        self.selected.insert(entry.id)
+                        self.scanCompleted += 1
+                    }
+                }
+            }
+
+            await MainActor.run {
+                self.entries.sort { $0.sizeBytes > $1.sizeBytes }
                 self.lastScanDate = .now
                 self.isScanning = false
-                if result.isEmpty {
+                if self.entries.isEmpty {
                     self.statusMessage = "No se ha encontrado ningún node_modules."
                 }
             }

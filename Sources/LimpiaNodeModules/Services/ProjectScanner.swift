@@ -10,20 +10,29 @@ enum ProjectScanner {
     ]
 
     static func scan(roots: [String]) -> [NodeModulesEntry] {
+        findNodeModulesPaths(roots: roots)
+            .map(measure(nodeModules:))
+            .sorted { $0.sizeBytes > $1.sizeBytes }
+    }
+
+    /// Fase rápida: solo localiza las carpetas node_modules.
+    static func findNodeModulesPaths(roots: [String]) -> [URL] {
         var found: [URL] = []
         for root in roots {
             findNodeModules(in: URL(fileURLWithPath: root), into: &found)
         }
-        return found.map { url in
-            let projectURL = url.deletingLastPathComponent()
-            return NodeModulesEntry(
-                nodeModulesPath: url.path,
-                projectPath: projectURL.path,
-                sizeBytes: directorySize(url),
-                lastActivity: lastActivity(inProject: projectURL)
-            )
-        }
-        .sorted { $0.sizeBytes > $1.sizeBytes }
+        return found
+    }
+
+    /// Fase costosa por entrada: tamaño e inactividad. Paralelizable.
+    static func measure(nodeModules url: URL) -> NodeModulesEntry {
+        let projectURL = url.deletingLastPathComponent()
+        return NodeModulesEntry(
+            nodeModulesPath: url.path,
+            projectPath: projectURL.path,
+            sizeBytes: directorySize(url),
+            lastActivity: lastActivity(inProject: projectURL)
+        )
     }
 
     /// Busca carpetas node_modules sin descender dentro de ellas (los

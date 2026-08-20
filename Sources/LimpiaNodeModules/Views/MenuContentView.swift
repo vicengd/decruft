@@ -48,24 +48,39 @@ struct MenuContentView: View {
     }
 
     private var scanControls: some View {
-        HStack {
-            Button {
-                state.scan()
-            } label: {
-                Label("Escanear", systemImage: "arrow.clockwise")
-            }
-            .disabled(state.isScanning)
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Button {
+                    state.scan()
+                } label: {
+                    Label("Escanear", systemImage: "arrow.clockwise")
+                }
+                .disabled(state.isScanning)
 
+                if !state.entries.isEmpty {
+                    Spacer()
+                    Text("Recuperable: \(AppState.format(state.totalRecoverableBytes))")
+                        .font(.callout.weight(.medium))
+                }
+            }
             if state.isScanning {
-                ProgressView()
+                if state.scanTotal > 0 {
+                    ProgressView(
+                        value: Double(state.scanCompleted),
+                        total: Double(state.scanTotal)
+                    ) {
+                        Text("Midiendo \(state.scanCompleted)/\(state.scanTotal) node_modules…")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } else {
+                    ProgressView {
+                        Text("Buscando node_modules…")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                     .controlSize(.small)
-                Text("Escaneando…")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            } else if !state.entries.isEmpty {
-                Spacer()
-                Text("Recuperable: \(AppState.format(state.totalRecoverableBytes))")
-                    .font(.callout.weight(.medium))
+                }
             }
         }
     }
@@ -96,7 +111,7 @@ struct MenuContentView: View {
                 .frame(maxWidth: .infinity)
             }
         }
-        .disabled(state.selectedEntries.isEmpty || state.isDeleting)
+        .disabled(state.selectedEntries.isEmpty || state.isDeleting || state.isScanning)
     }
 
     private var footer: some View {
