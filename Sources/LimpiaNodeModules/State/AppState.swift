@@ -6,7 +6,7 @@ import AppKit
 @Observable
 final class AppState {
     var config: AppConfig
-    var entries: [NodeModulesEntry] = []
+    var entries: [CleanableEntry] = []
     var selected: Set<String> = []
     var isScanning = false
     var scanTotal = 0
@@ -36,7 +36,7 @@ final class AppState {
         entries.reduce(0) { $0 + $1.sizeBytes }
     }
 
-    var selectedEntries: [NodeModulesEntry] {
+    var selectedEntries: [CleanableEntry] {
         entries.filter { selected.contains($0.id) }
     }
 
@@ -60,21 +60,21 @@ final class AppState {
         scanCompleted = 0
         let roots = config.roots
         Task.detached(priority: .userInitiated) {
-            let paths = ProjectScanner.findNodeModulesPaths(roots: roots)
+            let paths = ProjectScanner.findArtifactPaths(roots: roots)
             await MainActor.run {
                 self.scanTotal = paths.count
             }
 
             let maxConcurrent = min(8, max(2, ProcessInfo.processInfo.activeProcessorCount))
-            await withTaskGroup(of: NodeModulesEntry.self) { group in
+            await withTaskGroup(of: CleanableEntry.self) { group in
                 var pending = paths.makeIterator()
                 for _ in 0..<maxConcurrent {
                     guard let url = pending.next() else { break }
-                    group.addTask { ProjectScanner.measure(nodeModules: url) }
+                    group.addTask { ProjectScanner.measure(artifact: url) }
                 }
                 for await entry in group {
                     if let url = pending.next() {
-                        group.addTask { ProjectScanner.measure(nodeModules: url) }
+                        group.addTask { ProjectScanner.measure(artifact: url) }
                     }
                     await MainActor.run {
                         self.entries.append(entry)
@@ -89,7 +89,7 @@ final class AppState {
                 self.lastScanDate = .now
                 self.isScanning = false
                 if self.entries.isEmpty {
-                    self.statusMessage = "No se ha encontrado ningún node_modules."
+                    self.statusMessage = "No se ha encontrado nada que limpiar."
                 }
             }
         }
@@ -102,7 +102,7 @@ final class AppState {
         let targets = selectedEntries
 
         if config.dryRun {
-            statusMessage = "Solo mostrar: se habrían borrado \(targets.count) node_modules "
+            statusMessage = "Solo mostrar: se habrían borrado \(targets.count) artefactos "
                 + "(\(Self.format(targets.reduce(0) { $0 + $1.sizeBytes }))). Nada se ha tocado."
             return
         }
@@ -116,7 +116,7 @@ final class AppState {
             var errors: [String] = []
             // Borrar es I/O de metadatos: algo de paralelismo ayuda, mucho satura el disco.
             let maxConcurrent = 4
-            await withTaskGroup(of: (NodeModulesEntry, String?).self) { group in
+            await withTaskGroup(of: (CleanableEntry, String?).self) { group in
                 var pending = targets.makeIterator()
                 for _ in 0..<maxConcurrent {
                     guard let entry = pending.next() else { break }
@@ -143,7 +143,7 @@ final class AppState {
                 self.config.totalFreedBytes += self.deleteFreedBytes
                 ConfigStore.save(self.config)
                 var message = "Liberados \(Self.format(self.deleteFreedBytes)) "
-                    + "(\(self.deleteTotal - finalErrors.count) node_modules)."
+                    + "(\(self.deleteTotal - finalErrors.count) artefactos)."
                 if !finalErrors.isEmpty {
                     message += " Errores: \(finalErrors.joined(separator: "; "))"
                 }
@@ -160,7 +160,7 @@ final class AppState {
         config.totalFreedBytes += result.freedBytes
         ConfigStore.save(config)
 
-        var message = "Liberados \(Self.format(result.freedBytes)) (\(result.deleted.count) node_modules)."
+        var message = "Liberados \(Self.format(result.freedBytes)) (\(result.deleted.count) artefactos)."
         if !result.errors.isEmpty {
             message += " Errores: \(result.errors.joined(separator: "; "))"
         }
@@ -253,7 +253,7 @@ final class AppState {
         if dryRun {
             Notifier.notify(
                 title: "Limpieza automática (solo mostrar)",
-                body: "Se habrían borrado \(targets.count) node_modules inactivos ≥\(threshold) días "
+                body: "Se habrían borrado \(targets.count) artefactos de proyectos inactivos ≥\(threshold) días "
                     + "(\(Self.format(totalBytes))). Desactiva el modo solo mostrar para borrar de verdad."
             )
             return

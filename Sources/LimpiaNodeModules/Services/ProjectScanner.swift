@@ -1,54 +1,110 @@
 import Foundation
 
 enum ProjectScanner {
-    /// Directorios que no cuentan como "actividad" del proyecto: artefactos
-    /// regenerables y metadatos que se tocan solos (fetch de git, cachés…).
-    static let activityExcludedDirs: Set<String> = [
-        "node_modules", ".git", ".next", ".nuxt", ".output", ".svelte-kit",
-        "dist", "build", "out", "coverage", ".turbo", ".cache", ".parcel-cache",
-        ".venv", "venv", "__pycache__", ".build", "DerivedData", ".vercel",
+    /// Artefactos por nombre inequívoco: siempre regenerables.
+    static let alwaysArtifacts: Set<String> = [
+        "node_modules", ".next", ".nuxt", ".output", ".svelte-kit",
+        ".turbo", ".parcel-cache", ".vite", ".cache", "coverage", ".build",
     ]
 
-    static func scan(roots: [String]) -> [NodeModulesEntry] {
-        findNodeModulesPaths(roots: roots)
-            .map(measure(nodeModules:))
+    /// Nombres ambiguos: solo son artefactos si el padre es un proyecto
+    /// JS (package.json) o Android (gradle). Un "dist" dentro de un plugin
+    /// de WordPress o de vendor/ es código instalado, no output de build.
+    static let buildOutputNames: Set<String> = ["dist", "build", "out"]
+
+    /// Posibles virtualenvs de Python: solo si contienen pyvenv.cfg.
+    static let venvNames: Set<String> = [".venv", "venv", "env"]
+
+    /// Árboles de código vendorizado/instalado: dentro solo se detecta
+    /// node_modules (p. ej. un tema de WordPress en desarrollo).
+    static let vendoredTreeNames: Set<String> = [
+        "vendor", "wp-includes", "wp-admin", "wp-content", "site-packages",
+    ]
+
+    /// Directorios que no cuentan como "actividad" del proyecto: artefactos
+    /// regenerables y metadatos que se tocan solos (fetch de git, cachés…).
+    static let activityExcludedDirs: Set<String> = alwaysArtifacts
+        .union(buildOutputNames)
+        .union(venvNames)
+        .union([".git", "__pycache__", "DerivedData", ".vercel"])
+
+    static func scan(roots: [String]) -> [CleanableEntry] {
+        findArtifactPaths(roots: roots)
+            .map(measure(artifact:))
             .sorted { $0.sizeBytes > $1.sizeBytes }
     }
 
-    /// Fase rápida: solo localiza las carpetas node_modules.
-    static func findNodeModulesPaths(roots: [String]) -> [URL] {
+    /// Fase rápida: localiza los directorios de artefactos sin descender en ellos.
+    static func findArtifactPaths(roots: [String]) -> [URL] {
         var found: [URL] = []
         for root in roots {
-            findNodeModules(in: URL(fileURLWithPath: root), into: &found)
+            findArtifacts(in: URL(fileURLWithPath: root), isRoot: true, vendored: false, into: &found)
         }
         return found
     }
 
+    private static func findArtifacts(in directory: URL, isRoot: Bool, vendored: Bool, into found: inout [URL]) {
+        for child in subdirectories(of: directory) {
+            let name = child.lastPathComponent
+            // En el nivel raíz un "build" o "dist" sería un proyecto que se llama
+            // así, no un artefacto: solo cuenta como artefacto a partir del segundo nivel.
+            if !isRoot {
+                if name == "node_modules" {
+                    found.append(child)
+                    continue
+                }
+                if !vendored {
+                    if alwaysArtifacts.contains(name) {
+                        found.append(child)
+                        continue
+                    }
+                    if venvNames.contains(name), isVirtualenv(child) {
+                        found.append(child)
+                        continue
+                    }
+                    if buildOutputNames.contains(name), isBuildProject(directory) {
+                        found.append(child)
+                        continue
+                    }
+                }
+            }
+            if !name.hasPrefix(".") {
+                findArtifacts(
+                    in: child,
+                    isRoot: false,
+                    vendored: vendored || vendoredTreeNames.contains(name),
+                    into: &found
+                )
+            }
+        }
+    }
+
+    private static func isVirtualenv(_ directory: URL) -> Bool {
+        FileManager.default.fileExists(atPath: directory.appendingPathComponent("pyvenv.cfg").path)
+    }
+
+    /// El directorio padre delata si dist/build/out es output de build:
+    /// proyecto JS (package.json) o Android (gradle).
+    private static func isBuildProject(_ parent: URL) -> Bool {
+        let markers = ["package.json", "build.gradle", "build.gradle.kts", "settings.gradle"]
+        return markers.contains { marker in
+            FileManager.default.fileExists(atPath: parent.appendingPathComponent(marker).path)
+        }
+    }
+
     /// Fase costosa por entrada: tamaño e inactividad. Paralelizable.
-    static func measure(nodeModules url: URL) -> NodeModulesEntry {
+    static func measure(artifact url: URL) -> CleanableEntry {
         let projectURL = url.deletingLastPathComponent()
-        return NodeModulesEntry(
-            nodeModulesPath: url.path,
+        return CleanableEntry(
+            path: url.path,
             projectPath: projectURL.path,
             sizeBytes: directorySize(url),
             lastActivity: lastActivity(inProject: projectURL)
         )
     }
 
-    /// Busca carpetas node_modules sin descender dentro de ellas (los
-    /// node_modules anidados de dependencias quedan cubiertos por el padre).
-    private static func findNodeModules(in directory: URL, into found: inout [URL]) {
-        for child in subdirectories(of: directory) {
-            if child.lastPathComponent == "node_modules" {
-                found.append(child)
-            } else if !child.lastPathComponent.hasPrefix(".") {
-                findNodeModules(in: child, into: &found)
-            }
-        }
-    }
-
     /// Modificación más reciente de los ficheros del proyecto, excluyendo
-    /// node_modules, builds y metadatos. Es la señal de inactividad.
+    /// artefactos y metadatos. Es la señal de inactividad.
     static func lastActivity(inProject projectURL: URL) -> Date? {
         var latest: Date?
         walkForActivity(directory: projectURL, latest: &latest)

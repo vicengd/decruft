@@ -4,10 +4,10 @@ App de barra de menús para macOS que libera disco borrando carpetas `node_modul
 
 ## Qué hace
 
-- **Escanea** los directorios raíz configurados (por defecto `~/desarrollo`) buscando carpetas `node_modules`, ignorando las anidadas dentro de otras `node_modules`.
-- Para cada una muestra el **proyecto**, su **tamaño** y los **días de inactividad** (modificación más reciente de los ficheros del proyecto, excluyendo `node_modules`, builds y `.git`).
+- **Escanea** los directorios raíz configurados (por defecto `~/desarrollo`) buscando artefactos regenerables: `node_modules`, `.next`, `.nuxt`, `.output`, `.svelte-kit`, `.turbo`, `.parcel-cache`, `.vite`, `.cache`, `coverage`, `.build`, virtualenvs de Python (`.venv`/`venv`/`env` con `pyvenv.cfg`) y `dist`/`build`/`out` cuando son output de build de un proyecto JS o Android (padre con `package.json` o Gradle). Dentro de árboles vendorizados (`vendor`, `wp-includes`, `wp-admin`, `wp-content`, `site-packages`) solo detecta `node_modules` — un `dist` ahí es código instalado, no build.
+- Para cada artefacto muestra el **proyecto**, el **tipo**, su **tamaño** y los **días de inactividad** (modificación más reciente de los ficheros del proyecto, excluyendo artefactos y `.git`).
 - **Borrado manual**: selecciona las que quieras y pulsa "Borrar seleccionados". Borrado directo (equivalente a `rm -rf`), sin Papelera — `node_modules` se regenera con `npm install`.
-- **Limpieza automática diaria** (opcional): una vez al día borra solo los `node_modules` de proyectos inactivos ≥ N días (15 por defecto, configurable). Notificación de macOS con lo liberado.
+- **Limpieza automática diaria** (opcional): una vez al día borra solo los artefactos de proyectos inactivos ≥ N días (15 por defecto, configurable). Notificación de macOS con lo liberado.
 - **Modo solo mostrar (dry-run)**: activado por defecto. No borra nada; enseña qué se habría borrado. Desactívalo cuando hayas validado la lista.
 
 ## Build

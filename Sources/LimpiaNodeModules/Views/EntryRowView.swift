@@ -2,15 +2,23 @@ import SwiftUI
 
 struct EntryRowView: View {
     @Environment(AppState.self) private var state
-    let entry: NodeModulesEntry
+    let entry: CleanableEntry
 
     var body: some View {
         Toggle(isOn: isSelected) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(entry.projectName)
-                        .font(.callout)
-                        .lineLimit(1)
+                    HStack(spacing: 4) {
+                        Text(entry.projectName)
+                            .font(.callout)
+                            .lineLimit(1)
+                        Text(entry.kind)
+                            .font(.caption2.monospaced())
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 1)
+                            .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
+                            .foregroundStyle(.secondary)
+                    }
                     Text(entry.inactivityLabel)
                         .font(.caption2)
                         .foregroundStyle(isInactive ? .orange : .secondary)
@@ -23,7 +31,7 @@ struct EntryRowView: View {
         }
         .toggleStyle(.checkbox)
         .padding(.vertical, 2)
-        .help(entry.nodeModulesPath)
+        .help(entry.path)
     }
 
     private var isInactive: Bool {

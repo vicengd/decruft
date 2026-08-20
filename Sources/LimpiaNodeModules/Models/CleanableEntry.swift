@@ -1,12 +1,18 @@
 import Foundation
 
-struct NodeModulesEntry: Identifiable, Hashable, Sendable {
-    let nodeModulesPath: String
+/// Un directorio regenerable (node_modules, .next, dist, venv…) candidato a borrado.
+struct CleanableEntry: Identifiable, Hashable, Sendable {
+    let path: String
     let projectPath: String
     let sizeBytes: Int64
     let lastActivity: Date?
 
-    var id: String { nodeModulesPath }
+    var id: String { path }
+
+    /// Tipo de artefacto: el nombre del propio directorio ("node_modules", ".next"…).
+    var kind: String {
+        URL(fileURLWithPath: path).lastPathComponent
+    }
 
     var projectName: String {
         URL(fileURLWithPath: projectPath).lastPathComponent
