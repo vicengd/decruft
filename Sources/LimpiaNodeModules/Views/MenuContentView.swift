@@ -96,22 +96,29 @@ struct MenuContentView: View {
         .frame(maxHeight: 260)
     }
 
+    @ViewBuilder
     private var deleteButton: some View {
-        Button(role: .destructive) {
-            state.deleteSelected()
-        } label: {
-            if state.isDeleting {
-                Label("Borrando…", systemImage: "trash")
-                    .frame(maxWidth: .infinity)
-            } else {
+        if state.isDeleting {
+            ProgressView(
+                value: Double(state.deleteCompleted),
+                total: Double(max(1, state.deleteTotal))
+            ) {
+                Text("Borrando \(state.deleteCompleted)/\(state.deleteTotal) · liberados \(AppState.format(state.deleteFreedBytes))")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            Button(role: .destructive) {
+                state.deleteSelected()
+            } label: {
                 Label(
                     "Borrar seleccionados (\(state.selectedEntries.count) · \(AppState.format(state.selectedBytes)))",
                     systemImage: "trash"
                 )
                 .frame(maxWidth: .infinity)
             }
+            .disabled(state.selectedEntries.isEmpty || state.isScanning)
         }
-        .disabled(state.selectedEntries.isEmpty || state.isDeleting || state.isScanning)
     }
 
     private var footer: some View {

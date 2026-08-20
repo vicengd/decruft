@@ -12,6 +12,9 @@ final class AppState {
     var scanTotal = 0
     var scanCompleted = 0
     var isDeleting = false
+    var deleteTotal = 0
+    var deleteCompleted = 0
+    var deleteFreedBytes: Int64 = 0
     var lastScanDate: Date?
     var statusMessage: String?
     var launchAtLogin: Bool
@@ -105,15 +108,51 @@ final class AppState {
         }
 
         isDeleting = true
+        deleteTotal = targets.count
+        deleteCompleted = 0
+        deleteFreedBytes = 0
+
         Task.detached(priority: .userInitiated) {
-            let result = Cleaner.delete(entries: targets)
+            var errors: [String] = []
+            // Borrar es I/O de metadatos: algo de paralelismo ayuda, mucho satura el disco.
+            let maxConcurrent = 4
+            await withTaskGroup(of: (NodeModulesEntry, String?).self) { group in
+                var pending = targets.makeIterator()
+                for _ in 0..<maxConcurrent {
+                    guard let entry = pending.next() else { break }
+                    group.addTask { (entry, Cleaner.deleteOne(entry)) }
+                }
+                for await (entry, error) in group {
+                    if let next = pending.next() {
+                        group.addTask { (next, Cleaner.deleteOne(next)) }
+                    }
+                    if let error { errors.append(error) }
+                    await MainActor.run {
+                        self.deleteCompleted += 1
+                        if error == nil {
+                            self.entries.removeAll { $0.id == entry.id }
+                            self.selected.remove(entry.id)
+                            self.deleteFreedBytes += entry.sizeBytes
+                        }
+                    }
+                }
+            }
+            let finalErrors = errors
             await MainActor.run {
-                self.applyCleanResult(result, source: "manual")
+                self.isDeleting = false
+                self.config.totalFreedBytes += self.deleteFreedBytes
+                ConfigStore.save(self.config)
+                var message = "Liberados \(Self.format(self.deleteFreedBytes)) "
+                    + "(\(self.deleteTotal - finalErrors.count) node_modules)."
+                if !finalErrors.isEmpty {
+                    message += " Errores: \(finalErrors.joined(separator: "; "))"
+                }
+                self.statusMessage = message
             }
         }
     }
 
-    private func applyCleanResult(_ result: CleanResult, source: String) {
+    private func applyAutoCleanResult(_ result: CleanResult) {
         isDeleting = false
         let deletedIDs = Set(result.deleted.map(\.id))
         entries.removeAll { deletedIDs.contains($0.id) }
@@ -126,9 +165,7 @@ final class AppState {
             message += " Errores: \(result.errors.joined(separator: "; "))"
         }
         statusMessage = message
-        if source == "auto" {
-            Notifier.notify(title: "Limpieza automática", body: message)
-        }
+        Notifier.notify(title: "Limpieza automática", body: message)
     }
 
     // MARK: - Directorios raíz
@@ -225,7 +262,7 @@ final class AppState {
         let result = await Task.detached(priority: .utility) {
             Cleaner.delete(entries: targets)
         }.value
-        applyCleanResult(result, source: "auto")
+        applyAutoCleanResult(result)
     }
 
     static func dayString(from date: Date) -> String {

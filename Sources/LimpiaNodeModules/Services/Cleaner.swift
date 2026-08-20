@@ -13,13 +13,22 @@ enum Cleaner {
     static func delete(entries: [NodeModulesEntry]) -> CleanResult {
         var result = CleanResult()
         for entry in entries {
-            do {
-                try FileManager.default.removeItem(atPath: entry.nodeModulesPath)
+            if let error = deleteOne(entry) {
+                result.errors.append(error)
+            } else {
                 result.deleted.append(entry)
-            } catch {
-                result.errors.append("\(entry.projectName): \(error.localizedDescription)")
             }
         }
         return result
+    }
+
+    /// Borra una sola entrada; devuelve el mensaje de error o nil si fue bien.
+    static func deleteOne(_ entry: NodeModulesEntry) -> String? {
+        do {
+            try FileManager.default.removeItem(atPath: entry.nodeModulesPath)
+            return nil
+        } catch {
+            return "\(entry.projectName): \(error.localizedDescription)"
+        }
     }
 }
