@@ -26,7 +26,9 @@ struct MenuContentView: View {
         .padding(12)
         .frame(width: 380)
         .onAppear {
-            if state.entries.isEmpty && !state.isScanning {
+            // Solo si nunca se ha escaneado: una lista vacía tras borrar todo
+            // es el estado normal, no un motivo para reescanear.
+            if state.lastScanDate == nil && !state.isScanning {
                 state.scan()
             }
         }
@@ -81,6 +83,10 @@ struct MenuContentView: View {
                     }
                     .controlSize(.small)
                 }
+            } else if let last = state.lastScanDate {
+                Text("Último escaneo: \(last.formatted(date: .omitted, time: .shortened))")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
             }
         }
     }
