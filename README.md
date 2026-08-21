@@ -1,12 +1,12 @@
-# Escoba 🧹
+# Decruft 🧹
 
 **[English](#english) · [Español](#español)**
 
-macOS menu bar app that frees disk space by deleting regenerable folders from your dev projects — `node_modules`, `.next`, Python venvs, build outputs…
+Decruft is a macOS menu bar app that frees disk space by deleting the *cruft* your dev projects accumulate — folders any tool can regenerate — `node_modules`, `.next`, Python venvs, build outputs…
 
-App de barra de menús para macOS que libera disco borrando carpetas regenerables de tus proyectos — `node_modules`, `.next`, venvs de Python, builds…
+Decruft es una app de barra de menús para macOS que libera disco borrando las carpetas regenerables de tus proyectos — `node_modules`, `.next`, venvs de Python, builds…
 
-![Escoba](docs/screenshot.png)
+![Decruft](docs/screenshot.png)
 
 ---
 
@@ -23,14 +23,14 @@ App de barra de menús para macOS que libera disco borrando carpetas regenerable
 ### Install
 
 ```sh
-git clone https://github.com/vicengd/escoba.git
-cd escoba
-make install   # builds and copies Escoba.app to /Applications, then opens it
+git clone https://github.com/vicengd/decruft.git
+cd decruft
+make install   # builds and copies Decruft.app to /Applications, then opens it
 ```
 
 Requires Xcode (Swift 6) and macOS 14+. `make build` builds without installing; `make run` builds and opens from `build/`.
 
-Config lives in `~/Library/Application Support/Escoba/config.json`.
+Config lives in `~/Library/Application Support/Decruft/config.json`.
 
 ---
 
@@ -47,14 +47,14 @@ Config lives in `~/Library/Application Support/Escoba/config.json`.
 ### Instalación
 
 ```sh
-git clone https://github.com/vicengd/escoba.git
-cd escoba
-make install   # compila, copia Escoba.app a /Applications y la abre
+git clone https://github.com/vicengd/decruft.git
+cd decruft
+make install   # compila, copia Decruft.app a /Applications y la abre
 ```
 
 Requisitos: Xcode (Swift 6), macOS 14+. `make build` compila sin instalar; `make run` compila y abre desde `build/`.
 
-La configuración vive en `~/Library/Application Support/Escoba/config.json`.
+La configuración vive en `~/Library/Application Support/Decruft/config.json`.
 
 ---
 

@@ -5,11 +5,11 @@ import SwiftUI
 struct ArtifactInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Qué es Escoba")
+            Text("Qué es Decruft")
                 .font(.headline)
 
             Text(
-                "Escoba libera espacio en disco borrando las carpetas que las "
+                "Decruft libera espacio en disco borrando las carpetas que las "
                     + "herramientas de desarrollo regeneran solas: dependencias, "
                     + "builds, cachés y entornos virtuales. Escanea tus directorios "
                     + "de proyectos, muestra cuánto ocupa cada carpeta y cuántos "

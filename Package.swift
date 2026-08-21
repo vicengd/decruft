@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Escoba",
+    name: "Decruft",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "Escoba",
-            path: "Sources/Escoba"
+            name: "Decruft",
+            path: "Sources/Decruft"
         )
     ]
 )

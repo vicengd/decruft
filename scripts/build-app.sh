@@ -3,13 +3,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-APP="build/Escoba.app"
+APP="build/Decruft.app"
 
 swift build -c release
 
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS"
-cp .build/release/Escoba "$APP/Contents/MacOS/"
+cp .build/release/Decruft "$APP/Contents/MacOS/"
 cp Resources/Info.plist "$APP/Contents/"
 
 codesign --force --sign - "$APP"

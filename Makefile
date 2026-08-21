@@ -1,5 +1,5 @@
-APP = build/Escoba.app
-INSTALLED = /Applications/Escoba.app
+APP = build/Decruft.app
+INSTALLED = /Applications/Decruft.app
 
 .PHONY: build run install clean
 

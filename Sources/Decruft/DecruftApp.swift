@@ -1,11 +1,11 @@
 import SwiftUI
 
 @main
-struct EscobaApp: App {
+struct DecruftApp: App {
     @State private var appState = AppState()
 
     var body: some Scene {
-        MenuBarExtra("Escoba", systemImage: "sparkles") {
+        MenuBarExtra("Decruft", systemImage: "sparkles") {
             MenuContentView()
                 .environment(appState)
         }

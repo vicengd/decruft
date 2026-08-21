@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>es</string>
 	<key>CFBundleExecutable</key>
-	<string>Escoba</string>
+	<string>Decruft</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.vicentegarcia.limpia-node-modules</string>
+	<string>com.vicentegarcia.decruft</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Escoba</string>
+	<string>Decruft</string>
 	<key>CFBundleDisplayName</key>
-	<string>Escoba</string>
+	<string>Decruft</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

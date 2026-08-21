@@ -40,7 +40,7 @@ struct MenuContentView: View {
 
     private var header: some View {
         HStack {
-            Label("Escoba", systemImage: "sparkles")
+            Label("Decruft", systemImage: "sparkles")
                 .font(.headline)
             Button("Qué se borra", systemImage: "info.circle") {
                 showArtifactInfo.toggle()
