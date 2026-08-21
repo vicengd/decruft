@@ -20,7 +20,9 @@ struct MenuContentView: View {
             }
             Divider()
             RootsSectionView()
+            Divider()
             ExclusionsSectionView()
+            Divider()
             SettingsSectionView()
             Divider()
             footer
@@ -71,6 +73,12 @@ struct MenuContentView: View {
                 }
                 .disabled(state.isScanning)
 
+                if !state.isScanning, let last = state.lastScanDate {
+                    Text(last.formatted(date: .omitted, time: .shortened))
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
+
                 if !state.entries.isEmpty {
                     Spacer()
                     Text("Recuperable: \(AppState.format(state.totalRecoverableBytes))")
@@ -95,10 +103,6 @@ struct MenuContentView: View {
                     }
                     .controlSize(.small)
                 }
-            } else if let last = state.lastScanDate {
-                Text("Último escaneo: \(last.formatted(date: .omitted, time: .shortened))")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -155,6 +159,7 @@ struct MenuContentView: View {
                 )
                 .frame(maxWidth: .infinity)
             }
+            .tint(.red)
             .disabled(state.selectedEntries.isEmpty || state.isScanning)
         }
     }
