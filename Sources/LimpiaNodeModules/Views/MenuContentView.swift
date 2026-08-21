@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuContentView: View {
     @Environment(AppState.self) private var state
+    @State private var showArtifactInfo = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -39,6 +40,16 @@ struct MenuContentView: View {
         HStack {
             Label("Limpia node_modules", systemImage: "shippingbox")
                 .font(.headline)
+            Button("Qué se borra", systemImage: "info.circle") {
+                showArtifactInfo.toggle()
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.borderless)
+            .foregroundStyle(.secondary)
+            .help("Qué tipos de carpetas detecta y borra la app")
+            .popover(isPresented: $showArtifactInfo, arrowEdge: .bottom) {
+                ArtifactInfoView()
+            }
             Spacer()
             if state.config.dryRun {
                 Text("solo mostrar")
