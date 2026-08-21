@@ -5,8 +5,27 @@ import SwiftUI
 struct ArtifactInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Qué detecta y borra la app")
+            Text("Qué es Escoba")
                 .font(.headline)
+
+            Text(
+                "Escoba libera espacio en disco borrando las carpetas que las "
+                    + "herramientas de desarrollo regeneran solas: dependencias, "
+                    + "builds, cachés y entornos virtuales. Escanea tus directorios "
+                    + "de proyectos, muestra cuánto ocupa cada artefacto y cuántos "
+                    + "días lleva inactivo su proyecto, y te deja borrarlos a mano "
+                    + "o automáticamente cada día en proyectos parados. Nada de lo "
+                    + "que borra se pierde: se recupera con npm install o el "
+                    + "siguiente build."
+            )
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+
+            Divider()
+
+            Text("Qué detecta y borra")
+                .font(.subheadline.weight(.semibold))
 
             section(
                 "Siempre (regenerables por nombre)",
