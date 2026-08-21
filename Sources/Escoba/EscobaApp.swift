@@ -1,11 +1,11 @@
 import SwiftUI
 
 @main
-struct LimpiaNodeModulesApp: App {
+struct EscobaApp: App {
     @State private var appState = AppState()
 
     var body: some Scene {
-        MenuBarExtra("Limpia node_modules", systemImage: "shippingbox") {
+        MenuBarExtra("Escoba", systemImage: "sparkles") {
             MenuContentView()
                 .environment(appState)
         }

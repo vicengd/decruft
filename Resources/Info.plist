@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>es</string>
 	<key>CFBundleExecutable</key>
-	<string>LimpiaNodeModules</string>
+	<string>Escoba</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.vicentegarcia.limpia-node-modules</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Limpia node_modules</string>
+	<string>Escoba</string>
 	<key>CFBundleDisplayName</key>
-	<string>Limpia node_modules</string>
+	<string>Escoba</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

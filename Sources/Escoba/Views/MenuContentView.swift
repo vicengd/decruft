@@ -38,7 +38,7 @@ struct MenuContentView: View {
 
     private var header: some View {
         HStack {
-            Label("Limpia node_modules", systemImage: "shippingbox")
+            Label("Escoba", systemImage: "sparkles")
                 .font(.headline)
             Button("Qué se borra", systemImage: "info.circle") {
                 showArtifactInfo.toggle()

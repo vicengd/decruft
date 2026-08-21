@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "LimpiaNodeModules",
+    name: "Escoba",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "LimpiaNodeModules",
-            path: "Sources/LimpiaNodeModules"
+            name: "Escoba",
+            path: "Sources/Escoba"
         )
     ]
 )

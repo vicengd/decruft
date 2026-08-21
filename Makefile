@@ -1,5 +1,5 @@
-APP = build/Limpia node_modules.app
-INSTALLED = /Applications/Limpia node_modules.app
+APP = build/Escoba.app
+INSTALLED = /Applications/Escoba.app
 
 .PHONY: build run install clean
 

@@ -1,6 +1,6 @@
-# Limpia node_modules
+# Escoba
 
-App de barra de menús para macOS que libera disco borrando carpetas `node_modules` de proyectos.
+App de barra de menús para macOS que libera disco borrando artefactos regenerables de proyectos de desarrollo (`node_modules`, `.next`, venvs, builds…). Antes se llamaba "Limpia node_modules".
 
 ## Qué hace
 
@@ -14,7 +14,7 @@ App de barra de menús para macOS que libera disco borrando carpetas `node_modul
 ## Build
 
 ```sh
-make build     # compila y ensambla build/Limpia node_modules.app
+make build     # compila y ensambla build/Escoba.app
 make run       # build + abrir
 make install   # build + copiar a /Applications + abrir (recomendado para login item)
 ```
@@ -23,4 +23,4 @@ Requisitos: Xcode (Swift 6), macOS 14+.
 
 ## Config
 
-`~/Library/Application Support/LimpiaNodeModules/config.json` — directorios raíz, umbral de inactividad, flags y total liberado acumulado.
+`~/Library/Application Support/Escoba/config.json` (migrado automáticamente desde LimpiaNodeModules) — directorios raíz, umbral de inactividad, flags y total liberado acumulado.
