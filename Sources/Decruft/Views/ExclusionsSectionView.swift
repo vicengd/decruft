@@ -19,6 +19,7 @@ struct ExclusionsSectionView: View {
                 Text("Ninguno. Usa ⃠ en una fila o \"Excluir…\" para proteger proyectos en curso.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             ForEach(state.config.excludedPaths, id: \.self) { path in
                 HStack {
