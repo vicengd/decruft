@@ -12,7 +12,7 @@ struct ArtifactInfoView: View {
                 "Escoba libera espacio en disco borrando las carpetas que las "
                     + "herramientas de desarrollo regeneran solas: dependencias, "
                     + "builds, cachés y entornos virtuales. Escanea tus directorios "
-                    + "de proyectos, muestra cuánto ocupa cada artefacto y cuántos "
+                    + "de proyectos, muestra cuánto ocupa cada carpeta y cuántos "
                     + "días lleva inactivo su proyecto, y te deja borrarlos a mano "
                     + "o automáticamente cada día en proyectos parados. Nada de lo "
                     + "que borra se pierde: se recupera con npm install o el "
@@ -39,7 +39,7 @@ struct ArtifactInfoView: View {
             section(
                 "Solo si el padre es un proyecto JS o Android (package.json / Gradle)",
                 names: ProjectScanner.buildOutputNames,
-                note: "Un dist o build en otro contexto se considera código, no artefacto."
+                note: "Un dist o build en otro contexto se considera código y no se toca."
             )
 
             Divider()

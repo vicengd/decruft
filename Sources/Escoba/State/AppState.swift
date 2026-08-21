@@ -103,7 +103,7 @@ final class AppState {
         let targets = selectedEntries
 
         if config.dryRun {
-            statusMessage = "Solo mostrar: se habrían borrado \(targets.count) artefactos "
+            statusMessage = "Solo mostrar: se habrían borrado \(targets.count) carpetas "
                 + "(\(Self.format(targets.reduce(0) { $0 + $1.sizeBytes }))). Nada se ha tocado."
             return
         }
@@ -144,7 +144,7 @@ final class AppState {
                 self.config.totalFreedBytes += self.deleteFreedBytes
                 ConfigStore.save(self.config)
                 var message = "Liberados \(Self.format(self.deleteFreedBytes)) "
-                    + "(\(self.deleteTotal - finalErrors.count) artefactos)."
+                    + "(\(self.deleteTotal - finalErrors.count) carpetas)."
                 if !finalErrors.isEmpty {
                     message += " Errores: \(finalErrors.joined(separator: "; "))"
                 }
@@ -161,7 +161,7 @@ final class AppState {
         config.totalFreedBytes += result.freedBytes
         ConfigStore.save(config)
 
-        var message = "Liberados \(Self.format(result.freedBytes)) (\(result.deleted.count) artefactos)."
+        var message = "Liberados \(Self.format(result.freedBytes)) (\(result.deleted.count) carpetas)."
         if !result.errors.isEmpty {
             message += " Errores: \(result.errors.joined(separator: "; "))"
         }
@@ -283,7 +283,7 @@ final class AppState {
         if dryRun {
             Notifier.notify(
                 title: "Limpieza automática (solo mostrar)",
-                body: "Se habrían borrado \(targets.count) artefactos de proyectos inactivos ≥\(threshold) días "
+                body: "Se habrían borrado \(targets.count) carpetas de proyectos inactivos ≥\(threshold) días "
                     + "(\(Self.format(totalBytes))). Desactiva el modo solo mostrar para borrar de verdad."
             )
             return

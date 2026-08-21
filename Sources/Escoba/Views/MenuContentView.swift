@@ -91,13 +91,13 @@ struct MenuContentView: View {
                         value: Double(state.scanCompleted),
                         total: Double(state.scanTotal)
                     ) {
-                        Text("Midiendo \(state.scanCompleted)/\(state.scanTotal) artefactos…")
+                        Text("Midiendo \(state.scanCompleted)/\(state.scanTotal) carpetas…")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
                 } else {
                     ProgressView {
-                        Text("Buscando artefactos…")
+                        Text("Buscando carpetas regenerables…")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
