@@ -22,13 +22,21 @@ Decruft es una app de barra de menús para macOS que libera disco borrando las c
 
 ### Install
 
+**Option A — Download**: grab `Decruft-x.y.z.zip` from the [latest release](https://github.com/vicengd/decruft/releases/latest), unzip it and move `Decruft.app` to `/Applications`. The app is ad-hoc signed (not notarized), so on first launch use right-click → Open, or run:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Decruft.app
+```
+
+**Option B — Build from source** (requires Xcode with Swift 6, macOS 14+):
+
 ```sh
 git clone https://github.com/vicengd/decruft.git
 cd decruft
 make install   # builds and copies Decruft.app to /Applications, then opens it
 ```
 
-Requires Xcode (Swift 6) and macOS 14+. `make build` builds without installing; `make run` builds and opens from `build/`.
+`make build` builds without installing; `make run` builds and opens from `build/`.
 
 Config lives in `~/Library/Application Support/Decruft/config.json`.
 
@@ -46,13 +54,21 @@ Config lives in `~/Library/Application Support/Decruft/config.json`.
 
 ### Instalación
 
+**Opción A — Descarga**: baja `Decruft-x.y.z.zip` de la [última release](https://github.com/vicengd/decruft/releases/latest), descomprime y mueve `Decruft.app` a `/Aplicaciones`. La app va firmada ad-hoc (sin notarizar), así que la primera vez ábrela con clic derecho → Abrir, o ejecuta:
+
+```sh
+xattr -dr com.apple.quarantine /Applications/Decruft.app
+```
+
+**Opción B — Compilar desde el código** (requiere Xcode con Swift 6, macOS 14+):
+
 ```sh
 git clone https://github.com/vicengd/decruft.git
 cd decruft
 make install   # compila, copia Decruft.app a /Applications y la abre
 ```
 
-Requisitos: Xcode (Swift 6), macOS 14+. `make build` compila sin instalar; `make run` compila y abre desde `build/`.
+`make build` compila sin instalar; `make run` compila y abre desde `build/`.
 
 La configuración vive en `~/Library/Application Support/Decruft/config.json`.
 
