@@ -1,7 +1,7 @@
 APP = build/Decruft.app
 INSTALLED = /Applications/Decruft.app
 
-.PHONY: build run install clean
+.PHONY: build run install clean dmg
 
 build:
 	./scripts/build-app.sh
@@ -18,3 +18,12 @@ install: build
 
 clean:
 	rm -rf .build build
+
+# DMG con alias a /Applications para instalar arrastrando.
+dmg: build
+	rm -rf build/dmg-staging build/Decruft.dmg
+	mkdir -p build/dmg-staging
+	cp -R "$(APP)" build/dmg-staging/
+	ln -s /Applications build/dmg-staging/Applications
+	hdiutil create -volname "Decruft" -srcfolder build/dmg-staging -ov -format UDZO build/Decruft.dmg
+	rm -rf build/dmg-staging

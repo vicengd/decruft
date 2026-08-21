@@ -23,7 +23,7 @@ Decruft es una app de barra de menús para macOS que libera disco borrando las c
 
 ### Install
 
-**Option A — Download**: grab `Decruft-x.y.z.zip` from the [latest release](https://github.com/vicengd/decruft/releases/latest), unzip it and move `Decruft.app` to `/Applications`. The app is ad-hoc signed (not notarized), so on first launch use right-click → Open, or run:
+**Option A — Download**: grab the `.dmg` (drag to Applications) or the `.zip` from the [latest release](https://github.com/vicengd/decruft/releases/latest). The app is ad-hoc signed (not notarized), so on first launch use right-click → Open, or run:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Decruft.app
@@ -56,7 +56,7 @@ Config lives in `~/Library/Application Support/Decruft/config.json`.
 
 ### Instalación
 
-**Opción A — Descarga**: baja `Decruft-x.y.z.zip` de la [última release](https://github.com/vicengd/decruft/releases/latest), descomprime y mueve `Decruft.app` a `/Aplicaciones`. La app va firmada ad-hoc (sin notarizar), así que la primera vez ábrela con clic derecho → Abrir, o ejecuta:
+**Opción A — Descarga**: baja el `.dmg` (arrastra a Aplicaciones) o el `.zip` de la [última release](https://github.com/vicengd/decruft/releases/latest). La app va firmada ad-hoc (sin notarizar), así que la primera vez ábrela con clic derecho → Abrir, o ejecuta:
 
 ```sh
 xattr -dr com.apple.quarantine /Applications/Decruft.app
