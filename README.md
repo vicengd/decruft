@@ -1,6 +1,6 @@
 # Escoba
 
-App de barra de menús para macOS que libera disco borrando carpetas regenerables de proyectos de desarrollo (`node_modules`, `.next`, venvs, builds…). Antes se llamaba "Limpia node_modules".
+App de barra de menús para macOS que libera disco borrando carpetas regenerables de proyectos de desarrollo (`node_modules`, `.next`, venvs, builds…).
 
 ## Qué hace
 
