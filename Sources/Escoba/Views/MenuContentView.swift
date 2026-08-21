@@ -103,7 +103,24 @@ struct MenuContentView: View {
         }
     }
 
+    private let rowHeight: CGFloat = 42
+
+    @ViewBuilder
     private var entryList: some View {
+        HStack {
+            Text("\(state.selectedEntries.count) de \(state.entries.count) seleccionados")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Button("Todos") {
+                state.selected = Set(state.entries.map(\.id))
+            }
+            .buttonStyle(.borderless)
+            Button("Ninguno") {
+                state.selected = []
+            }
+            .buttonStyle(.borderless)
+        }
         ScrollView {
             LazyVStack(spacing: 2) {
                 ForEach(state.entries) { entry in
@@ -111,7 +128,10 @@ struct MenuContentView: View {
                 }
             }
         }
-        .frame(maxHeight: 260)
+        // En un popover de MenuBarExtra, un ScrollView sin altura explícita
+        // colapsa (el contenido lazy no declara altura ideal): se fija según
+        // el número de filas, con tope para que la ventana no crezca sin fin.
+        .frame(height: min(260, CGFloat(state.entries.count) * rowHeight))
     }
 
     @ViewBuilder
