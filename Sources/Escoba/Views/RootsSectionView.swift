@@ -4,22 +4,20 @@ struct RootsSectionView: View {
     @Environment(AppState.self) private var state
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text("Directorios raíz")
-                    .font(.caption.weight(.semibold))
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Añadir…", systemImage: "plus") {
                     state.addRoot()
                 }
-                .font(.caption)
                 .buttonStyle(.borderless)
             }
             ForEach(state.config.roots, id: \.self) { root in
                 HStack {
                     Text(abbreviated(root))
-                        .font(.caption)
                         .lineLimit(1)
                         .truncationMode(.middle)
                         .help(root)

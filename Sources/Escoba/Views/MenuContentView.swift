@@ -14,7 +14,7 @@ struct MenuContentView: View {
             }
             if let message = state.statusMessage {
                 Text(message)
-                    .font(.caption)
+                    .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -53,7 +53,7 @@ struct MenuContentView: View {
             Spacer()
             if state.config.dryRun {
                 Text("solo mostrar")
-                    .font(.caption2)
+                    .font(.caption)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .background(.yellow.opacity(0.25), in: Capsule())
@@ -84,21 +84,21 @@ struct MenuContentView: View {
                         total: Double(state.scanTotal)
                     ) {
                         Text("Midiendo \(state.scanCompleted)/\(state.scanTotal) artefactos…")
-                            .font(.caption)
+                            .font(.callout)
                             .foregroundStyle(.secondary)
                     }
                 } else {
                     ProgressView {
                         Text("Buscando artefactos…")
-                            .font(.caption)
+                            .font(.callout)
                             .foregroundStyle(.secondary)
                     }
                     .controlSize(.small)
                 }
             } else if let last = state.lastScanDate {
                 Text("Último escaneo: \(last.formatted(date: .omitted, time: .shortened))")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -122,7 +122,7 @@ struct MenuContentView: View {
                 total: Double(max(1, state.deleteTotal))
             ) {
                 Text("Borrando \(state.deleteCompleted)/\(state.deleteTotal) · liberados \(AppState.format(state.deleteFreedBytes))")
-                    .font(.caption)
+                    .font(.callout)
                     .foregroundStyle(.secondary)
             }
         } else {
@@ -142,13 +142,12 @@ struct MenuContentView: View {
     private var footer: some View {
         HStack {
             Text("Total liberado: \(AppState.format(state.config.totalFreedBytes))")
-                .font(.caption)
+                .font(.callout)
                 .foregroundStyle(.secondary)
             Spacer()
             Button("Salir") {
                 NSApplication.shared.terminate(nil)
             }
-            .font(.caption)
         }
     }
 }

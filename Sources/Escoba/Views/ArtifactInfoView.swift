@@ -27,34 +27,34 @@ struct ArtifactInfoView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Nunca se toca")
-                    .font(.caption.weight(.semibold))
+                    .font(.subheadline.weight(.semibold))
                 Text(
                     "Dentro de \(ProjectScanner.vendoredTreeNames.sorted().joined(separator: ", ")) "
                         + "solo se detecta node_modules: el resto es código instalado "
                         + "(plugins de WordPress, paquetes de Composer…). "
                         + ".git y .env no se detectan nunca: no son regenerables."
                 )
-                .font(.caption)
+                .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(14)
-        .frame(width: 340)
+        .frame(width: 360)
     }
 
     private func section(_ title: String, names: Set<String>, note: String? = nil) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .font(.caption.weight(.semibold))
+                .font(.subheadline.weight(.semibold))
             Text(names.sorted().joined(separator: "   "))
-                .font(.caption.monospaced())
+                .font(.callout.monospaced())
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
             if let note {
                 Text(note)
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

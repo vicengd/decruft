@@ -10,34 +10,33 @@ struct EntryRowView: View {
                 VStack(alignment: .leading, spacing: 1) {
                     HStack(spacing: 4) {
                         Text(entry.projectName)
-                            .font(.callout)
                             .lineLimit(1)
                         Text(entry.kind)
-                            .font(.caption2.monospaced())
+                            .font(.caption.monospaced())
                             .padding(.horizontal, 4)
                             .padding(.vertical, 1)
                             .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
                             .foregroundStyle(.secondary)
                     }
                     Text(entry.inactivityLabel)
-                        .font(.caption2)
+                        .font(.callout)
                         .foregroundStyle(isInactive ? .orange : .secondary)
                 }
                 Spacer()
                 Text(AppState.format(entry.sizeBytes))
-                    .font(.callout.monospacedDigit())
+                    .font(.body.monospacedDigit())
                     .foregroundStyle(.secondary)
                 Button("Excluir proyecto", systemImage: "nosign") {
                     state.excludeProject(entry.projectPath)
                 }
                 .labelStyle(.iconOnly)
                 .buttonStyle(.borderless)
-                .foregroundStyle(.tertiary)
+                .foregroundStyle(.secondary)
                 .help("Excluir \(entry.projectName) del escaneo")
             }
         }
         .toggleStyle(.checkbox)
-        .padding(.vertical, 2)
+        .padding(.vertical, 3)
         .help(entry.path)
     }
 

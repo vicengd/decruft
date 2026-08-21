@@ -4,9 +4,9 @@ struct SettingsSectionView: View {
     @Environment(AppState.self) private var state
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Ajustes")
-                .font(.caption.weight(.semibold))
+                .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
 
             Toggle("Modo solo mostrar (no borra nada)", isOn: dryRun)
@@ -18,13 +18,11 @@ struct SettingsSectionView: View {
                     value: threshold,
                     in: 1...90
                 )
-                .font(.caption)
             }
 
             Toggle("Abrir al iniciar sesión", isOn: launchAtLogin)
         }
         .toggleStyle(.checkbox)
-        .font(.callout)
     }
 
     private var dryRun: Binding<Bool> {
