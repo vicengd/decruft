@@ -27,6 +27,13 @@ struct EntryRowView: View {
                 Text(AppState.format(entry.sizeBytes))
                     .font(.callout.monospacedDigit())
                     .foregroundStyle(.secondary)
+                Button("Excluir proyecto", systemImage: "nosign") {
+                    state.excludeProject(entry.projectPath)
+                }
+                .labelStyle(.iconOnly)
+                .buttonStyle(.borderless)
+                .foregroundStyle(.tertiary)
+                .help("Excluir \(entry.projectName) del escaneo")
             }
         }
         .toggleStyle(.checkbox)

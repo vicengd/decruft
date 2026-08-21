@@ -2,6 +2,7 @@ import Foundation
 
 struct AppConfig: Codable, Sendable {
     var roots: [String]
+    var excludedPaths: [String]
     var autoCleanEnabled: Bool
     var inactivityThresholdDays: Int
     var dryRun: Bool
@@ -12,6 +13,7 @@ struct AppConfig: Codable, Sendable {
 
     static let `default` = AppConfig(
         roots: [defaultRoot],
+        excludedPaths: [],
         autoCleanEnabled: false,
         inactivityThresholdDays: 15,
         dryRun: true,
@@ -21,6 +23,7 @@ struct AppConfig: Codable, Sendable {
 
     init(
         roots: [String],
+        excludedPaths: [String],
         autoCleanEnabled: Bool,
         inactivityThresholdDays: Int,
         dryRun: Bool,
@@ -28,6 +31,7 @@ struct AppConfig: Codable, Sendable {
         totalFreedBytes: Int64
     ) {
         self.roots = roots
+        self.excludedPaths = excludedPaths
         self.autoCleanEnabled = autoCleanEnabled
         self.inactivityThresholdDays = inactivityThresholdDays
         self.dryRun = dryRun
@@ -39,6 +43,7 @@ struct AppConfig: Codable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         roots = try container.decodeIfPresent([String].self, forKey: .roots) ?? [Self.defaultRoot]
+        excludedPaths = try container.decodeIfPresent([String].self, forKey: .excludedPaths) ?? []
         autoCleanEnabled = try container.decodeIfPresent(Bool.self, forKey: .autoCleanEnabled) ?? false
         inactivityThresholdDays = try container.decodeIfPresent(Int.self, forKey: .inactivityThresholdDays) ?? 15
         dryRun = try container.decodeIfPresent(Bool.self, forKey: .dryRun) ?? true

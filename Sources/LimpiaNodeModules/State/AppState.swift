@@ -59,8 +59,9 @@ final class AppState {
         scanTotal = 0
         scanCompleted = 0
         let roots = config.roots
+        let excluded = Set(config.excludedPaths)
         Task.detached(priority: .userInitiated) {
-            let paths = ProjectScanner.findArtifactPaths(roots: roots)
+            let paths = ProjectScanner.findArtifactPaths(roots: roots, excluded: excluded)
             await MainActor.run {
                 self.scanTotal = paths.count
             }
@@ -190,6 +191,34 @@ final class AppState {
         ConfigStore.save(config)
     }
 
+    // MARK: - Exclusiones
+
+    /// Excluye un proyecto del escaneo y retira sus artefactos de la lista actual.
+    func excludeProject(_ path: String) {
+        guard !config.excludedPaths.contains(path) else { return }
+        config.excludedPaths.append(path)
+        ConfigStore.save(config)
+        entries.removeAll { $0.projectPath == path || $0.projectPath.hasPrefix(path + "/") }
+        selected = selected.filter { id in entries.contains { $0.id == id } }
+    }
+
+    func addExclusion() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = URL(fileURLWithPath: AppConfig.defaultRoot)
+        panel.prompt = "Excluir"
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        excludeProject(url.path)
+    }
+
+    func removeExclusion(_ path: String) {
+        config.excludedPaths.removeAll { $0 == path }
+        ConfigStore.save(config)
+    }
+
     // MARK: - Ajustes
 
     func setDryRun(_ enabled: Bool) {
@@ -237,11 +266,12 @@ final class AppState {
         guard config.lastAutoCleanDay != today else { return }
 
         let roots = config.roots
+        let excluded = Set(config.excludedPaths)
         let threshold = config.inactivityThresholdDays
         let dryRun = config.dryRun
 
         let targets = await Task.detached(priority: .utility) {
-            ProjectScanner.scan(roots: roots).filter { $0.inactiveDays >= threshold }
+            ProjectScanner.scan(roots: roots, excluded: excluded).filter { $0.inactiveDays >= threshold }
         }.value
 
         config.lastAutoCleanDay = today

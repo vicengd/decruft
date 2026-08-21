@@ -19,6 +19,7 @@ struct MenuContentView: View {
             }
             Divider()
             RootsSectionView()
+            ExclusionsSectionView()
             SettingsSectionView()
             Divider()
             footer

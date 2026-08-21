@@ -28,23 +28,25 @@ enum ProjectScanner {
         .union(venvNames)
         .union([".git", "__pycache__", "DerivedData", ".vercel"])
 
-    static func scan(roots: [String]) -> [CleanableEntry] {
-        findArtifactPaths(roots: roots)
+    static func scan(roots: [String], excluded: Set<String> = []) -> [CleanableEntry] {
+        findArtifactPaths(roots: roots, excluded: excluded)
             .map(measure(artifact:))
             .sorted { $0.sizeBytes > $1.sizeBytes }
     }
 
     /// Fase rápida: localiza los directorios de artefactos sin descender en ellos.
-    static func findArtifactPaths(roots: [String]) -> [URL] {
+    static func findArtifactPaths(roots: [String], excluded: Set<String> = []) -> [URL] {
         var found: [URL] = []
         for root in roots {
-            findArtifacts(in: URL(fileURLWithPath: root), isRoot: true, vendored: false, into: &found)
+            findArtifacts(in: URL(fileURLWithPath: root), isRoot: true, vendored: false, excluded: excluded, into: &found)
         }
         return found
     }
 
-    private static func findArtifacts(in directory: URL, isRoot: Bool, vendored: Bool, into found: inout [URL]) {
+    private static func findArtifacts(in directory: URL, isRoot: Bool, vendored: Bool, excluded: Set<String>, into found: inout [URL]) {
         for child in subdirectories(of: directory) {
+            // Subárbol excluido por el usuario: ni se lista ni se desciende.
+            guard !excluded.contains(child.path) else { continue }
             let name = child.lastPathComponent
             // En el nivel raíz un "build" o "dist" sería un proyecto que se llama
             // así, no un artefacto: solo cuenta como artefacto a partir del segundo nivel.
@@ -73,6 +75,7 @@ enum ProjectScanner {
                     in: child,
                     isRoot: false,
                     vendored: vendored || vendoredTreeNames.contains(name),
+                    excluded: excluded,
                     into: &found
                 )
             }
