@@ -18,9 +18,16 @@ struct EntryRowView: View {
                             .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
                             .foregroundStyle(.secondary)
                     }
-                    Text(entry.inactivityLabel)
-                        .font(.callout)
-                        .foregroundStyle(isInactive ? Color.secondary : Color.orange)
+                    HStack(spacing: 4) {
+                        if !isInactive {
+                            Circle()
+                                .fill(.green)
+                                .frame(width: 6, height: 6)
+                        }
+                        Text(entry.inactivityLabel)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                    }
                 }
                 Spacer()
                 Text(AppState.format(entry.sizeBytes))
@@ -40,7 +47,7 @@ struct EntryRowView: View {
         .help(entry.path)
     }
 
-    /// Naranja = proyecto activo: borrar sus artefactos implica regenerarlos pronto.
+    /// Punto verde = proyecto activo: borrar sus artefactos implica regenerarlos pronto.
     private var isInactive: Bool {
         entry.inactiveDays >= state.config.inactivityThresholdDays
     }

@@ -159,7 +159,6 @@ struct MenuContentView: View {
                 )
                 .frame(maxWidth: .infinity)
             }
-            .tint(.red)
             .disabled(state.selectedEntries.isEmpty || state.isScanning)
         }
     }
