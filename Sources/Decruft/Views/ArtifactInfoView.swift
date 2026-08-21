@@ -5,64 +5,54 @@ import SwiftUI
 struct ArtifactInfoView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Qué es Decruft")
+            Text("What is Decruft")
                 .font(.headline)
 
-            Text(
-                "Decruft libera espacio en disco borrando las carpetas que las "
-                    + "herramientas de desarrollo regeneran solas: dependencias, "
-                    + "builds, cachés y entornos virtuales. Escanea tus directorios "
-                    + "de proyectos, muestra cuánto ocupa cada carpeta y cuántos "
-                    + "días lleva inactivo su proyecto, y te deja borrarlos a mano "
-                    + "o automáticamente cada día en proyectos parados. Nada de lo "
-                    + "que borra se pierde: se recupera con npm install o el "
-                    + "siguiente build."
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
+            Text("Decruft frees disk space by deleting the folders your dev tools regenerate on their own: dependencies, builds, caches and virtual environments. It scans your project folders, shows how much each one takes and how long its project has been inactive, and lets you delete them manually or automatically every day for idle projects. Nothing it deletes is lost: it comes back with npm install or your next build.")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
 
             Divider()
 
-            Text("Qué detecta y borra")
+            Text("What it detects and deletes")
                 .font(.subheadline.weight(.semibold))
 
             section(
-                "Siempre (regenerables por nombre)",
+                "Always (regenerable by name)",
                 names: ProjectScanner.alwaysArtifacts
             )
             section(
-                "Solo si son un virtualenv real (contienen pyvenv.cfg)",
+                "Only if they are a real virtualenv (contain pyvenv.cfg)",
                 names: ProjectScanner.venvNames,
-                note: "Se regeneran con pip install -r requirements.txt / uv sync."
+                note: "They regenerate with pip install -r requirements.txt / uv sync."
             )
             section(
-                "Solo si el padre es un proyecto JS o Android (package.json / Gradle)",
+                "Only if the parent is a JS or Android project (package.json / Gradle)",
                 names: ProjectScanner.buildOutputNames,
-                note: "Un dist o build en otro contexto se considera código y no se toca."
+                note: "A dist or build in any other context is treated as code and never touched."
             )
 
             Divider()
 
             VStack(alignment: .leading, spacing: 3) {
-                Text("Nunca se toca")
+                Text("Never touched")
                     .font(.subheadline.weight(.semibold))
-                Text(
-                    "Dentro de \(ProjectScanner.vendoredTreeNames.sorted().joined(separator: ", ")) "
-                        + "solo se detecta node_modules: el resto es código instalado "
-                        + "(plugins de WordPress, paquetes de Composer…). "
-                        + ".git y .env no se detectan nunca: no son regenerables."
-                )
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+                Text("Inside \(ProjectScanner.vendoredTreeNames.sorted().joined(separator: ", ")) only node_modules is detected: everything else is installed code (WordPress plugins, Composer packages…). .git and .env are never detected: they are not regenerable.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(14)
         .frame(width: 360)
     }
 
-    private func section(_ title: String, names: Set<String>, note: String? = nil) -> some View {
+    private func section(
+        _ title: LocalizedStringKey,
+        names: Set<String>,
+        note: LocalizedStringKey? = nil
+    ) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
                 .font(.subheadline.weight(.semibold))

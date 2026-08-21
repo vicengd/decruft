@@ -6,17 +6,17 @@ struct ExclusionsSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Excluidos del escaneo")
+                Text("Excluded from scanning")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("Excluir…", systemImage: "plus") {
+                Button("Exclude…", systemImage: "plus") {
                     state.addExclusion()
                 }
                 .buttonStyle(.borderless)
             }
             if state.config.excludedPaths.isEmpty {
-                Text("Ninguno. Usa ⃠ en una fila o \"Excluir…\" para proteger proyectos en curso.")
+                Text("None yet. Use ⃠ on a row or \"Exclude…\" to protect projects you are working on.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -28,7 +28,7 @@ struct ExclusionsSectionView: View {
                         .truncationMode(.middle)
                         .help(path)
                     Spacer()
-                    Button("Quitar exclusión", systemImage: "minus.circle") {
+                    Button("Remove exclusion", systemImage: "minus.circle") {
                         state.removeExclusion(path)
                     }
                     .labelStyle(.iconOnly)

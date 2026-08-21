@@ -6,11 +6,11 @@ struct RootsSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Directorios raíz")
+                Text("Root folders")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
                 Spacer()
-                Button("Añadir…", systemImage: "plus") {
+                Button("Add…", systemImage: "plus") {
                     state.addRoot()
                 }
                 .buttonStyle(.borderless)
@@ -22,7 +22,7 @@ struct RootsSectionView: View {
                         .truncationMode(.middle)
                         .help(root)
                     Spacer()
-                    Button("Quitar directorio", systemImage: "minus.circle") {
+                    Button("Remove folder", systemImage: "minus.circle") {
                         state.removeRoot(root)
                     }
                     .labelStyle(.iconOnly)

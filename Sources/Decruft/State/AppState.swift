@@ -90,7 +90,7 @@ final class AppState {
                 self.lastScanDate = .now
                 self.isScanning = false
                 if self.entries.isEmpty {
-                    self.statusMessage = "No se ha encontrado nada que limpiar."
+                    self.statusMessage = String(localized: "Nothing to clean was found.")
                 }
             }
         }
@@ -103,8 +103,10 @@ final class AppState {
         let targets = selectedEntries
 
         if config.dryRun {
-            statusMessage = "Solo mostrar: se habrían borrado \(targets.count) carpetas "
-                + "(\(Self.format(targets.reduce(0) { $0 + $1.sizeBytes }))). Nada se ha tocado."
+            let dryRunBytes = Self.format(targets.reduce(0) { $0 + $1.sizeBytes })
+            statusMessage = String(
+                localized: "Dry run: \(targets.count) folders would have been deleted (\(dryRunBytes)). Nothing was touched."
+            )
             return
         }
 
@@ -143,10 +145,11 @@ final class AppState {
                 self.isDeleting = false
                 self.config.totalFreedBytes += self.deleteFreedBytes
                 ConfigStore.save(self.config)
-                var message = "Liberados \(Self.format(self.deleteFreedBytes)) "
-                    + "(\(self.deleteTotal - finalErrors.count) carpetas)."
+                var message = String(
+                    localized: "Freed \(Self.format(self.deleteFreedBytes)) (\(self.deleteTotal - finalErrors.count) folders)."
+                )
                 if !finalErrors.isEmpty {
-                    message += " Errores: \(finalErrors.joined(separator: "; "))"
+                    message += String(localized: " Errors: \(finalErrors.joined(separator: "; "))")
                 }
                 self.statusMessage = message
             }
@@ -161,12 +164,14 @@ final class AppState {
         config.totalFreedBytes += result.freedBytes
         ConfigStore.save(config)
 
-        var message = "Liberados \(Self.format(result.freedBytes)) (\(result.deleted.count) carpetas)."
+        var message = String(
+            localized: "Freed \(Self.format(result.freedBytes)) (\(result.deleted.count) folders)."
+        )
         if !result.errors.isEmpty {
-            message += " Errores: \(result.errors.joined(separator: "; "))"
+            message += String(localized: " Errors: \(result.errors.joined(separator: "; "))")
         }
         statusMessage = message
-        Notifier.notify(title: "Limpieza automática", body: message)
+        Notifier.notify(title: String(localized: "Automatic cleanup"), body: message)
     }
 
     // MARK: - Directorios raíz
@@ -177,7 +182,7 @@ final class AppState {
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
         panel.directoryURL = URL(fileURLWithPath: AppConfig.defaultRoot)
-        panel.prompt = "Añadir"
+        panel.prompt = String(localized: "Add")
         NSApp.activate(ignoringOtherApps: true)
         guard panel.runModal() == .OK, let url = panel.url else { return }
         let path = url.path
@@ -208,7 +213,7 @@ final class AppState {
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
         panel.directoryURL = URL(fileURLWithPath: AppConfig.defaultRoot)
-        panel.prompt = "Excluir"
+        panel.prompt = String(localized: "Exclude")
         NSApp.activate(ignoringOtherApps: true)
         guard panel.runModal() == .OK, let url = panel.url else { return }
         excludeProject(url.path)
@@ -245,7 +250,7 @@ final class AppState {
             launchAtLogin = enabled
         } catch {
             launchAtLogin = LoginItemManager.isEnabled
-            statusMessage = "No se pudo cambiar el arranque al iniciar sesión: \(error.localizedDescription)"
+            statusMessage = String(localized: "Could not change launch at login: \(error.localizedDescription)")
         }
     }
 
@@ -282,9 +287,10 @@ final class AppState {
 
         if dryRun {
             Notifier.notify(
-                title: "Limpieza automática (solo mostrar)",
-                body: "Se habrían borrado \(targets.count) carpetas de proyectos inactivos ≥\(threshold) días "
-                    + "(\(Self.format(totalBytes))). Desactiva el modo solo mostrar para borrar de verdad."
+                title: String(localized: "Automatic cleanup (dry run)"),
+                body: String(
+                    localized: "\(targets.count) folders from projects inactive ≥\(threshold) days would have been deleted (\(Self.format(totalBytes))). Turn off dry-run mode to actually delete."
+                )
             )
             return
         }

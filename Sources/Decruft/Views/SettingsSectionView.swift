@@ -5,22 +5,22 @@ struct SettingsSectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Ajustes")
+            Text("Settings")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.secondary)
 
-            Toggle("Modo solo mostrar (no borra nada)", isOn: dryRun)
-            Toggle("Limpieza automática diaria", isOn: autoClean)
+            Toggle("Dry-run mode (deletes nothing)", isOn: dryRun)
+            Toggle("Daily automatic cleanup", isOn: autoClean)
 
             if state.config.autoCleanEnabled {
                 Stepper(
-                    "Borrar inactivos ≥ \(state.config.inactivityThresholdDays) días",
+                    "Delete if inactive ≥ \(state.config.inactivityThresholdDays) days",
                     value: threshold,
                     in: 1...90
                 )
             }
 
-            Toggle("Abrir al iniciar sesión", isOn: launchAtLogin)
+            Toggle("Launch at login", isOn: launchAtLogin)
         }
         .toggleStyle(.checkbox)
     }

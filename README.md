@@ -19,6 +19,7 @@ Decruft es una app de barra de menús para macOS que libera disco borrando las c
 - **Manual cleanup** with per-folder selection, or **daily automatic cleanup** that only touches projects inactive for ≥ N days (15 by default, configurable), with a macOS notification of what was freed.
 - **Exclusions** to protect projects you are actively working on, and a **dry-run mode** (on by default) that shows what would be deleted without touching anything.
 - Deletion is direct (like `rm -rf`), no Trash: everything it deletes regenerates with `npm install` or your next build.
+- UI in **English and Spanish** — it follows your system language (per-app override available in System Settings → Language & Region).
 - **Safety rule**: inside vendored trees (`vendor`, `wp-includes`, `wp-admin`, `wp-content`, `site-packages`) all detection is disabled except `node_modules` — a `dist` or `build` in there is installed plugin/package code, not your build output, and deleting it would break the site.
 
 ### Install
@@ -52,6 +53,7 @@ Config lives in `~/Library/Application Support/Decruft/config.json`.
 - **Borrado manual** con selección por carpeta, o **limpieza automática diaria** que solo toca proyectos inactivos ≥ N días (15 por defecto, configurable), con notificación de macOS de lo liberado.
 - **Exclusiones** para proteger proyectos en curso, y **modo solo mostrar (dry-run)**, activado por defecto: enseña qué se habría borrado sin tocar nada.
 - Borrado directo (equivalente a `rm -rf`), sin Papelera: todo lo que borra se regenera con `npm install` o el siguiente build.
+- Interfaz en **español e inglés** — sigue el idioma del sistema (ajustable por app en Ajustes del Sistema → Idioma y región).
 - **Regla de seguridad**: dentro de árboles vendorizados (`vendor`, `wp-includes`, `wp-admin`, `wp-content`, `site-packages`) se desactiva toda la detección salvo `node_modules` — un `dist` o `build` ahí dentro es código instalado de un plugin o paquete, no un build tuyo, y borrarlo rompería el sitio.
 
 ### Instalación

@@ -1,0 +1,61 @@
+/* Cabecera y escaneo */
+"What gets deleted" = "Qué se borra";
+"Which folder types the app detects and deletes" = "Qué tipos de carpetas detecta y borra la app";
+"dry run" = "solo mostrar";
+"Scan" = "Escanear";
+"Recoverable: %@" = "Recuperable: %@";
+"%lld of %lld selected" = "%lld de %lld seleccionados";
+"All" = "Todos";
+"None" = "Ninguno";
+"Measuring %lld/%lld folders…" = "Midiendo %lld/%lld carpetas…";
+"Scanning for regenerable folders…" = "Buscando carpetas regenerables…";
+"Delete selected (%lld · %@)" = "Borrar seleccionados (%lld · %@)";
+"Deleting %lld/%lld · freed %@" = "Borrando %lld/%lld · liberados %@";
+"Total freed: %@" = "Total liberado: %@";
+"Quit" = "Salir";
+
+/* Filas */
+"Exclude project" = "Excluir proyecto";
+"Exclude %@ from scanning" = "Excluir %@ del escaneo";
+"no data" = "sin datos";
+"active today" = "activo hoy";
+"1 day inactive" = "1 día inactivo";
+"%lld days inactive" = "%lld días inactivo";
+
+/* Secciones */
+"Root folders" = "Directorios raíz";
+"Add…" = "Añadir…";
+"Remove folder" = "Quitar directorio";
+"Excluded from scanning" = "Excluidos del escaneo";
+"Exclude…" = "Excluir…";
+"None yet. Use ⃠ on a row or \"Exclude…\" to protect projects you are working on." = "Ninguno. Usa ⃠ en una fila o \"Excluir…\" para proteger proyectos en curso.";
+"Remove exclusion" = "Quitar exclusión";
+"Settings" = "Ajustes";
+"Dry-run mode (deletes nothing)" = "Modo solo mostrar (no borra nada)";
+"Daily automatic cleanup" = "Limpieza automática diaria";
+"Delete if inactive ≥ %lld days" = "Borrar inactivos ≥ %lld días";
+"Launch at login" = "Abrir al iniciar sesión";
+
+/* Panel de info */
+"What is Decruft" = "Qué es Decruft";
+"Decruft frees disk space by deleting the folders your dev tools regenerate on their own: dependencies, builds, caches and virtual environments. It scans your project folders, shows how much each one takes and how long its project has been inactive, and lets you delete them manually or automatically every day for idle projects. Nothing it deletes is lost: it comes back with npm install or your next build." = "Decruft libera espacio en disco borrando las carpetas que las herramientas de desarrollo regeneran solas: dependencias, builds, cachés y entornos virtuales. Escanea tus directorios de proyectos, muestra cuánto ocupa cada carpeta y cuántos días lleva inactivo su proyecto, y te deja borrarlas a mano o automáticamente cada día en proyectos parados. Nada de lo que borra se pierde: se recupera con npm install o el siguiente build.";
+"What it detects and deletes" = "Qué detecta y borra";
+"Always (regenerable by name)" = "Se borran siempre (regenerables por su nombre)";
+"Only if they are a real virtualenv (contain pyvenv.cfg)" = "Solo si son un virtualenv real (contienen pyvenv.cfg)";
+"They regenerate with pip install -r requirements.txt / uv sync." = "Se regeneran con pip install -r requirements.txt / uv sync.";
+"Only if the parent is a JS or Android project (package.json / Gradle)" = "Solo si el padre es un proyecto JS o Android (package.json / Gradle)";
+"A dist or build in any other context is treated as code and never touched." = "Un dist o build en otro contexto se considera código y no se toca.";
+"Never touched" = "Nunca se toca";
+"Inside %@ only node_modules is detected: everything else is installed code (WordPress plugins, Composer packages…). .git and .env are never detected: they are not regenerable." = "Dentro de %@ solo se detecta node_modules: el resto es código instalado (plugins de WordPress, paquetes de Composer…). .git y .env no se detectan nunca: no son regenerables.";
+
+/* Mensajes de estado y notificaciones */
+"Nothing to clean was found." = "No se ha encontrado nada que limpiar.";
+"Dry run: %lld folders would have been deleted (%@). Nothing was touched." = "Solo mostrar: se habrían borrado %lld carpetas (%@). Nada se ha tocado.";
+"Freed %@ (%lld folders)." = "Liberados %@ (%lld carpetas).";
+" Errors: %@" = " Errores: %@";
+"Automatic cleanup" = "Limpieza automática";
+"Automatic cleanup (dry run)" = "Limpieza automática (solo mostrar)";
+"%lld folders from projects inactive ≥%lld days would have been deleted (%@). Turn off dry-run mode to actually delete." = "Se habrían borrado %lld carpetas de proyectos inactivos ≥%lld días (%@). Desactiva el modo solo mostrar para borrar de verdad.";
+"Could not change launch at login: %@" = "No se pudo cambiar el arranque al iniciar sesión: %@";
+"Add" = "Añadir";
+"Exclude" = "Excluir";

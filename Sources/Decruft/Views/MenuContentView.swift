@@ -42,19 +42,19 @@ struct MenuContentView: View {
         HStack {
             Label("Decruft", systemImage: "sparkles")
                 .font(.headline)
-            Button("Qué se borra", systemImage: "info.circle") {
+            Button("What gets deleted", systemImage: "info.circle") {
                 showArtifactInfo.toggle()
             }
             .labelStyle(.iconOnly)
             .buttonStyle(.borderless)
             .foregroundStyle(.secondary)
-            .help("Qué tipos de carpetas detecta y borra la app")
+            .help("Which folder types the app detects and deletes")
             .popover(isPresented: $showArtifactInfo, arrowEdge: .bottom) {
                 ArtifactInfoView()
             }
             Spacer()
             if state.config.dryRun {
-                Text("solo mostrar")
+                Text("dry run")
                     .font(.caption)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
@@ -69,7 +69,7 @@ struct MenuContentView: View {
                 Button {
                     state.scan()
                 } label: {
-                    Label("Escanear", systemImage: "arrow.clockwise")
+                    Label("Scan", systemImage: "arrow.clockwise")
                 }
                 .disabled(state.isScanning)
 
@@ -81,7 +81,7 @@ struct MenuContentView: View {
 
                 if !state.entries.isEmpty {
                     Spacer()
-                    Text("Recuperable: \(AppState.format(state.totalRecoverableBytes))")
+                    Text("Recoverable: \(AppState.format(state.totalRecoverableBytes))")
                         .font(.callout.weight(.medium))
                 }
             }
@@ -91,13 +91,13 @@ struct MenuContentView: View {
                         value: Double(state.scanCompleted),
                         total: Double(state.scanTotal)
                     ) {
-                        Text("Midiendo \(state.scanCompleted)/\(state.scanTotal) carpetas…")
+                        Text("Measuring \(state.scanCompleted)/\(state.scanTotal) folders…")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
                 } else {
                     ProgressView {
-                        Text("Buscando carpetas regenerables…")
+                        Text("Scanning for regenerable folders…")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
@@ -112,15 +112,15 @@ struct MenuContentView: View {
     @ViewBuilder
     private var entryList: some View {
         HStack {
-            Text("\(state.selectedEntries.count) de \(state.entries.count) seleccionados")
+            Text("\(state.selectedEntries.count) of \(state.entries.count) selected")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Spacer()
-            Button("Todos") {
+            Button("All") {
                 state.selected = Set(state.entries.map(\.id))
             }
             .buttonStyle(.borderless)
-            Button("Ninguno") {
+            Button("None") {
                 state.selected = []
             }
             .buttonStyle(.borderless)
@@ -145,7 +145,7 @@ struct MenuContentView: View {
                 value: Double(state.deleteCompleted),
                 total: Double(max(1, state.deleteTotal))
             ) {
-                Text("Borrando \(state.deleteCompleted)/\(state.deleteTotal) · liberados \(AppState.format(state.deleteFreedBytes))")
+                Text("Deleting \(state.deleteCompleted)/\(state.deleteTotal) · freed \(AppState.format(state.deleteFreedBytes))")
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -154,7 +154,7 @@ struct MenuContentView: View {
                 state.deleteSelected()
             } label: {
                 Label(
-                    "Borrar seleccionados (\(state.selectedEntries.count) · \(AppState.format(state.selectedBytes)))",
+                    "Delete selected (\(state.selectedEntries.count) · \(AppState.format(state.selectedBytes)))",
                     systemImage: "trash"
                 )
                 .frame(maxWidth: .infinity)
@@ -165,11 +165,11 @@ struct MenuContentView: View {
 
     private var footer: some View {
         HStack {
-            Text("Total liberado: \(AppState.format(state.config.totalFreedBytes))")
+            Text("Total freed: \(AppState.format(state.config.totalFreedBytes))")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Spacer()
-            Button("Salir") {
+            Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }
         }

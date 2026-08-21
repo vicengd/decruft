@@ -24,10 +24,10 @@ struct CleanableEntry: Identifiable, Hashable, Sendable {
     }
 
     var inactivityLabel: String {
-        guard lastActivity != nil else { return "sin datos" }
+        guard lastActivity != nil else { return String(localized: "no data") }
         let days = inactiveDays
-        if days == 0 { return "activo hoy" }
-        if days == 1 { return "1 día inactivo" }
-        return "\(days) días inactivo"
+        if days == 0 { return String(localized: "active today") }
+        if days == 1 { return String(localized: "1 day inactive") }
+        return String(localized: "\(days) days inactive")
     }
 }
